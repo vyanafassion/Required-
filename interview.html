@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Interview Form</title>
+<style>
+body { font-family: Arial; text-align:center; padding:30px; background:#f9f9f9; }
+h1 { color:#ff9900; }
+form { max-width:500px; margin:auto; background:#fff3e0; padding:20px; border-radius:8px; }
+input, select, textarea, button { width:100%; padding:8px; margin:8px 0; border-radius:4px; border:1px solid #ccc; box-sizing:border-box; }
+input[type="file"] { padding:3px; }
+button { background:#ff9900; color:white; border:none; cursor:pointer; }
+button:hover { background:#e68a00; }
+label { display:block; margin-top:10px; font-weight:600; text-align:left; }
+</style>
+</head>
+<body>
+
+<h1>Schedule Your Online Interview</h1>
+
+<form id="interviewForm" enctype="multipart/form-data">
+  <input type="text" name="name" placeholder="Full Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="tel" name="phone" placeholder="Phone Number" required>
+
+  <label>Job Position</label>
+  <select name="position" required>
+    <option value="">Select Position</option>
+    <option value="Front-end Developer">Front-end Developer</option>
+    <option value="Back-end Developer">Back-end Developer</option>
+    <option value="Digital Marketing Executive">Digital Marketing Executive</option>
+    <option value="Back Office Executive">Back Office Executive</option>
+    <option value="Tele Calling Executive">Tele Calling Executive</option>
+    <option value="Courier Boys">Courier Boys</option>
+    <option value="Partner Opportunities">Partner Opportunities</option>
+  </select>
+
+  <label>Preferred Date & Time</label>
+  <input type="datetime-local" name="datetime" required>
+
+  <label>Message / Notes</label>
+  <textarea name="message" rows="3" placeholder="Any specific notes"></textarea>
+
+  <!-- Added Resume Upload -->
+  <label>Upload CV / Resume (PDF, DOC)</label>
+  <input type="file" name="cv" accept=".pdf,.doc,.docx" required>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Prefill position from vacancy page
+  const selectedPosition = sessionStorage.getItem('selectedPosition');
+  if(selectedPosition){
+    document.querySelector('select[name="position"]').value = selectedPosition;
+    sessionStorage.removeItem('selectedPosition');
+  }
+
+  document.getElementById('interviewForm').addEventListener('submit', function(e){
+    e.preventDefault(); // prevent reload
+
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const phone = form.phone.value;
+    const position = form.position.value;
+    const datetime = form.datetime.value;
+    const message = form.message.value;
+
+    // Save data in sessionStorage for payment page
+    sessionStorage.setItem('applicantName', name);
+    sessionStorage.setItem('applicantEmail', email);
+    sessionStorage.setItem('applicantPhone', phone);
+    sessionStorage.setItem('applicantPosition', position);
+    sessionStorage.setItem('interviewDatetime', datetime);
+    sessionStorage.setItem('applicantMessage', message);
+
+    // Save Resume file name (actual file cannot be stored in sessionStorage)
+    const cvFile = form.cv.files[0];
+    if(cvFile){
+      sessionStorage.setItem('applicantCV', cvFile.name);
+    }
+
+    // Redirect to payment page
+    window.location.href = 'payment.html';
+  });
+});
+</script>
+
+</body>
+</html>
